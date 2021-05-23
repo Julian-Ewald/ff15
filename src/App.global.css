@@ -189,14 +189,23 @@ input:active {
 .matchH {
   max-height: 600px;
   overflow-y: scroll;
+  background-color: #171717;
 }
 .matchHItem:last-child {
   margin-bottom: 0px !important;
 }
 .matchHItem {
-  background-color: #171717;
+  background-color: #1D1D1D;
   margin-bottom: 10px;
   padding: 10px;
   border-radius: 10px;
   color: #C4C4C4;
+  font-size: 14px;
+  transition-duration: 200ms;
+}
+.matchHItem:hover {
+  transform: translateX(2px) translateY(-2px);
+  transition-duration: 200ms;
+  box-shadow: -2px 2px 0px 0px #00adb5;
+  cursor: pointer;
 }
