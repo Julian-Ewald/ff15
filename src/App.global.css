@@ -124,9 +124,8 @@ input:active {
   border-radius: 10px;
 }
 .champion:hover {
-  transform: translateY(-4px) translateX(4px);
+  transform: translateY(-2px);
   transition-duration: 200ms;
-  box-shadow: -4px 4px 0px 0px #00adb5;
 }
 .champion:active {
   background-color: #1a1f25;
@@ -151,9 +150,8 @@ input:active {
   transition-duration: 200ms;
 }
 .spellImg:hover {
-  transform: translateX(2px) translateY(-2px);
+  transform: translateY(-2px);
   transition-duration: 200ms;
-  box-shadow: -2px 2px 0px 0px #00adb5;
   cursor: pointer;
 }
 
@@ -203,9 +201,8 @@ input:active {
   transition-duration: 200ms;
 }
 .matchHItem:hover {
-  transform: translateX(2px) translateY(-2px);
+  transform: translateY(-2px);
   transition-duration: 200ms;
-  box-shadow: -2px 2px 0px 0px #00adb5;
   cursor: pointer;
 }
 .matchHItem:hover .champLvl {
@@ -214,7 +211,7 @@ input:active {
 }
 
 .matchHItem:hover .won_lost {
-  height: 30px;
+  height: 40px;
   transition-duration: 200ms;
 }
 .matchHItem:active {

@@ -19,6 +19,7 @@ export default function SummonerSearchScreen () {
 
     const [summoners, setSummoners] = useState<any>([]);
     const [runes, setRunes] = useState<any>([]);
+    const [gameType, setGameType] = useState<any>([]);
 
     const listSums:any = []
 
@@ -42,13 +43,13 @@ export default function SummonerSearchScreen () {
           <rect x="19.5" y="90" rx="10" ry="10" width="60" height="28" />
           <rect x="0" y="140" rx="10" ry="10" width="102" height="21" />
           <rect x="132" y="0" rx="10" ry="10" width="102" height="21" />
-          <rect x="132" y="35" rx="10" ry="10" width="965" height="70" />
-          <rect x="132" y="115" rx="10" ry="10" width="965" height="70" />
-          <rect x="132" y="200" rx="10" ry="10" width="965" height="70" />
-          <rect x="132" y="280" rx="10" ry="10" width="965" height="70" />
-          <rect x="132" y="365" rx="10" ry="10" width="965" height="70" />
-          <rect x="132" y="450" rx="10" ry="10" width="965" height="70" />
-          <rect x="132" y="530" rx="10" ry="10" width="965" height="70" />
+          <rect x="132" y="35" rx="10" ry="10" width="955" height="70" />
+          <rect x="132" y="115" rx="10" ry="10" width="955" height="70" />
+          <rect x="132" y="200" rx="10" ry="10" width="955" height="70" />
+          <rect x="132" y="280" rx="10" ry="10" width="955" height="70" />
+          <rect x="132" y="365" rx="10" ry="10" width="955" height="70" />
+          <rect x="132" y="450" rx="10" ry="10" width="955" height="70" />
+          <rect x="132" y="530" rx="10" ry="10" width="955" height="70" />
         </ContentLoader>
     )
     
@@ -113,6 +114,10 @@ export default function SummonerSearchScreen () {
                     await fetch("http://ddragon.leagueoflegends.com/cdn/11.10.1/data/en_US/runesReforged.json")
                     .then(response => response.json())
                     .then(data => setRunes(data))
+
+                    await fetch("http://static.developer.riotgames.com/docs/lol/queues.json")
+                    .then(response => response.json())
+                    .then(data => setGameType(data))
     
                     setIsLoading(false)
                     setTempSumName(values.summonerName);
@@ -198,19 +203,30 @@ export default function SummonerSearchScreen () {
                                 <div>
                                     {
                                         matches.map((x:any, i:number) => 
+                                        <>
                                             <div className="matchHItem" key={x.info.gameId}>
                                                 {
                                                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', width: "100%"}}>
                                                         <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                                                            <div style={{fontSize: 12, marginRight: 15}}>
-                                                                <div style={{
-                                                                    color: x.info.participants[playerPos[i]].win ? '#4BB543' : '#B94646',
-                                                                    marginBottom: 5
-                                                                }}>
-                                                                    {
-                                                                        x.info.participants[playerPos[i]].win ? 'Won' : 'Lost'
-                                                                    }
-                                                                </div>
+                                                            <div style={{fontSize: 11, marginRight: 15}}>
+                                                            <div style={{
+                                                                marginBottom: 2,
+                                                                fontSize: 12,
+                                                                color: '#6E6E6E',
+                                                                width: 80,
+                                                            }}>
+                                                                {
+                                                                    gameType.map((j: any) => 
+                                                                        <>
+                                                                            {j.queueId == x.info.queueId && 
+                                                                                <div>
+                                                                                    {x.info.gameMode == "ARAM" ? "ARAM" : j.description.split(" ")[1] + " " + j.description.split(" ")[2]}
+                                                                                </div>
+                                                                            }
+                                                                        </>
+                                                                    )
+                                                                }
+                                                            </div>
                                                                 <div style={{
                                                                     marginBottom: 5
                                                                 }}>
@@ -241,7 +257,7 @@ export default function SummonerSearchScreen () {
                                                             <div style={{
                                                                 display: 'flex',
                                                                 flexDirection: 'column',
-                                                                marginRight: 20,
+                                                                marginRight: 15,
                                                                 marginLeft: 10
                                                             }}>
                                                                 {
@@ -313,7 +329,7 @@ export default function SummonerSearchScreen () {
                                                                     )
                                                                 }
                                                             </div>
-                                                            <div style={{width: 140}}>{x.info.participants[playerPos[i]].championName}</div>
+                                                            <div style={{width: 110}}>{x.info.participants[playerPos[i]].championName}</div>
                                                         </div>
                                                         <div style={{textAlign: 'center', alignItems: 'center'}}>
                                                             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: 70}}>
@@ -346,7 +362,7 @@ export default function SummonerSearchScreen () {
                                                             display:'flex',
                                                             justifyContent: 'space-between',
                                                             width: 280,
-                                                            marginLeft: 100
+                                                            marginLeft: 80
                                                         }}>
                                                             {x.info.participants[playerPos[i]].item0 != 0 ? (
                                                                 <img style={{width: 30, borderRadius: 15}} src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/item/${x.info.participants[playerPos[i]].item0}.png`} />
@@ -381,7 +397,7 @@ export default function SummonerSearchScreen () {
                                                             {x.info.participants[playerPos[i]].item6 != 0 ? (
                                                                 <img style={{width: 30, borderRadius: 15, marginLeft: 15}} src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/item/${x.info.participants[playerPos[i]].item6}.png`} />
                                                             ) : (
-                                                                <div style={{width: 30, height: 30, borderRadius: 15, backgroundColor: '#282828'}} />
+                                                                <div style={{width: 30, height: 30, borderRadius: 15, backgroundColor: '#282828', marginLeft: 15}} />
                                                             )}
                                                         </div>
                                                         <div className="won_lost" style={{
@@ -393,6 +409,7 @@ export default function SummonerSearchScreen () {
                                                     </div>
                                                 }
                                             </div>
+                                        </>
                                         )
                                     }
                                 </div>
