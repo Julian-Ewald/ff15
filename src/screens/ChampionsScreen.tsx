@@ -32,7 +32,7 @@ export default function ChampionsScreen () {
 
   const list = []
 
-  for (let key in champs){
+  for(let key in champs) {
     if(champs.hasOwnProperty(key)){ 
       list.push(`${key}`)
     }

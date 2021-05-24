@@ -189,13 +189,12 @@ input:active {
 .matchH {
   max-height: 600px;
   overflow-y: scroll;
-  background-color: #171717;
 }
 .matchHItem:last-child {
   margin-bottom: 0px !important;
 }
 .matchHItem {
-  background-color: #1D1D1D;
+  background-color: #171717;
   margin-bottom: 10px;
   padding: 10px;
   border-radius: 10px;
@@ -208,4 +207,25 @@ input:active {
   transition-duration: 200ms;
   box-shadow: -2px 2px 0px 0px #00adb5;
   cursor: pointer;
+}
+.matchHItem:hover .champLvl {
+  opacity: 1;
+  transition-duration: 200ms;
+}
+
+.matchHItem:hover .won_lost {
+  height: 30px;
+  transition-duration: 200ms;
+}
+.matchHItem:active {
+  background-color: #1a1f25;
+}
+.champLvl {
+  transform: translateX(20px) translateY(-18px);
+  transition-duration: 200ms;
+  opacity: 0.7;
+}
+.won_lost {
+  height: 20px;
+  transition-duration: 200ms;
 }

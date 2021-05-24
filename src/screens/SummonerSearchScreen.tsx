@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Formik } from 'formik';
 import { IoSearch } from "react-icons/io5"
 import '../App.global.css';
-import { loadPartialConfig } from '@babel/core';
 
 export default function SummonerSearchScreen () {
 
@@ -16,6 +15,17 @@ export default function SummonerSearchScreen () {
     const [matches, setMatches] = useState<any>([]);
     const [playerPos, setPlayerPos] = useState<any>([]);
 
+    const [summoners, setSummoners] = useState<any>([]);
+    const [runes, setRunes] = useState<any>([]);
+
+    const listSums:any = []
+
+    for(let key in summoners) {
+        if(summoners.hasOwnProperty(key)){ 
+            listSums.push(`${key}`)
+        }
+    }
+    
     return (
     <div className="bigContainer" style={{backgroundColor: '#1D1D1D' }}>
         <Formik
@@ -67,6 +77,15 @@ export default function SummonerSearchScreen () {
                     temp = []
                     temp1 = []
                 })
+
+                await fetch("http://ddragon.leagueoflegends.com/cdn/11.10.1/data/en_US/summoner.json")
+                .then(response => response.json())
+                .then(data => setSummoners(data.data))
+
+                await fetch("http://ddragon.leagueoflegends.com/cdn/11.10.1/data/en_US/runesReforged.json")
+                .then(response => response.json())
+                .then(data => setRunes(data))
+
                 setIsLoading(false)
                 scrollToBtm.current?.scrollIntoView({behavior: 'smooth'})
                 setSubmitting(false)
@@ -133,7 +152,8 @@ export default function SummonerSearchScreen () {
                                 width: "100%", 
                                 borderRadius: 10,
                                 marginLeft: 20,
-                                padding: 10
+                                paddingLeft: 10,
+                                paddingRight: 10
                             }}>
                                 <div style={{
                                     color: '#C4C4C4', 
@@ -149,13 +169,123 @@ export default function SummonerSearchScreen () {
                                         matches.map((x:any, i:number) => 
                                             <div className="matchHItem" key={x.info.gameId}>
                                                 {
-                                                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                                                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', width: "100%"}}>
                                                         <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                                                            <img style={{width: 40, height: 40, borderRadius: 20, marginRight: 15}} src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/champion/${x.info.participants[playerPos[i]].championName}.png`} />
-                                                            <div style={{width: 100}}>{x.info.participants[playerPos[i]].championName}</div>
+                                                            <div style={{fontSize: 12, marginRight: 15}}>
+                                                                <div style={{
+                                                                    color: x.info.participants[playerPos[i]].win ? '#4BB543' : '#B94646',
+                                                                    marginBottom: 5
+                                                                }}>
+                                                                    {
+                                                                        x.info.participants[playerPos[i]].win ? 'Won' : 'Lost'
+                                                                    }
+                                                                </div>
+                                                                <div style={{
+                                                                    marginBottom: 5
+                                                                }}>
+                                                                    {(x.info.participants[playerPos[i]].timePlayed / 60).toFixed(0)}:{Math.round(parseFloat("0." + (x.info.participants[playerPos[i]].timePlayed / 60).toFixed(2).split(".")[1]) * 60)}
+                                                                </div>
+                                                                <div style={{fontSize: 11}}>
+                                                                    {
+                                                                        new Date(x.info.gameStartTimestamp).toLocaleDateString()
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                            <div style={{height: 40}}>
+                                                                <img style={{width: 40, height: 40, borderRadius: 20, marginRight: 5}} src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/champion/${x.info.participants[playerPos[i]].championName}.png`} />
+                                                                <div className="champLvl" style={{
+                                                                    backgroundColor: '#171717',
+                                                                    width: 25,
+                                                                    padding: 5,
+                                                                    textAlign: 'center',
+                                                                    borderRadius: 10,
+                                                                    paddingLeft: 2,
+                                                                    paddingRight: 2,
+                                                                    fontSize: 11
+                                                                }}>
+                                                                    {x.info.participants[playerPos[i]].champLevel}
+                                                                </div>
+                                                            </div>
+
+                                                            <div style={{
+                                                                display: 'flex',
+                                                                flexDirection: 'column',
+                                                                marginRight: 20,
+                                                                marginLeft: 10
+                                                            }}>
+                                                                {
+                                                                    listSums.map((a: any) => 
+                                                                        <>
+                                                                            {summoners[a].key == x.info.participants[playerPos[i]].summoner1Id && (
+                                                                                <img
+                                                                                    src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/spell/${summoners[a].image.full}`}
+                                                                                    style={{
+                                                                                        width: 25
+                                                                                    }}
+                                                                                />
+                                                                            )}
+                                                                        </>
+                                                                    )
+                                                                }
+                                                                {
+                                                                    listSums.map((a: any) => 
+                                                                        <>
+                                                                            {summoners[a].key == x.info.participants[playerPos[i]].summoner2Id && (
+                                                                                <img
+                                                                                    src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/spell/${summoners[a].image.full}`}
+                                                                                    style={{
+                                                                                        width: 25
+                                                                                    }}
+                                                                                />
+                                                                            )}
+                                                                        </>
+                                                                    )
+                                                                }
+                                                            </div>
+                                                            <div style={{
+                                                                display: 'flex',
+                                                                flexDirection: 'row',
+                                                                marginRight: 20,
+                                                                marginLeft: 5,
+                                                                alignItems: 'center',
+                                                            }}>
+                                                                {
+                                                                    runes.map((j: any, b: number) => 
+                                                                        <>
+                                                                            {x.info.participants[playerPos[i]].perks.styles[0].style == runes[b].id && (
+                                                                                <img 
+                                                                                    src={`C:\\Users\\Julian\\Desktop\\Projekte\\lol_app\\src\\assets\\${runes[b].icon}`} 
+                                                                                    style={{
+                                                                                        width: 20,
+                                                                                        backgroundColor: '#282828',
+                                                                                        borderRadius: 50,
+                                                                                        padding: 5,
+                                                                                        marginRight: 10
+                                                                                    }}
+                                                                                />
+                                                                            )}
+                                                                        </>
+                                                                    )
+                                                                }
+                                                                {
+                                                                    runes.map((j: any, b: number) => 
+                                                                        <>
+                                                                            {x.info.participants[playerPos[i]].perks.styles[1].style == runes[b].id && (
+                                                                                <img 
+                                                                                    src={`C:\\Users\\Julian\\Desktop\\Projekte\\lol_app\\src\\assets\\${runes[b].icon}`} 
+                                                                                    style={{
+                                                                                        width: 15
+                                                                                    }}
+                                                                                />
+                                                                            )}
+                                                                        </>
+                                                                    )
+                                                                }
+                                                            </div>
+                                                            <div style={{width: 140}}>{x.info.participants[playerPos[i]].championName}</div>
                                                         </div>
                                                         <div style={{textAlign: 'center', alignItems: 'center'}}>
-                                                            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+                                                            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: 70}}>
                                                                 <div style={{ width: 25, textAlign: "center"}}>{x.info.participants[playerPos[i]].kills}</div>
                                                                 <div>/</div>
                                                                 <div style={{color: "#B94646", width: 25, textAlign: "center"}}>{x.info.participants[playerPos[i]].deaths}</div>
@@ -167,18 +297,68 @@ export default function SummonerSearchScreen () {
                                                                     KDA:
                                                                 </div>
                                                                 <div style={{
-                                                                    color: 
+                                                                    color:
                                                                         parseFloat(((x.info.participants[playerPos[i]].kills + x.info.participants[playerPos[i]].assists) / 
-                                                                        x.info.participants[playerPos[i]].deaths).toFixed(2)) >= 7.00 ? "#4BB543" : 
+                                                                        x.info.participants[playerPos[i]].deaths).toFixed(2)) >= 7.00 ? 
+                                                                        parseFloat(((x.info.participants[playerPos[i]].kills + x.info.participants[playerPos[i]].assists) / 
+                                                                        x.info.participants[playerPos[i]].deaths).toFixed(2)) == Infinity ? "#00adb5" : "#4BB543" : 
                                                                         parseFloat(((x.info.participants[playerPos[i]].kills + x.info.participants[playerPos[i]].assists) / 
                                                                         x.info.participants[playerPos[i]].deaths).toFixed(2)) <= 7.00 && 
                                                                         parseFloat(((x.info.participants[playerPos[i]].kills + x.info.participants[playerPos[i]].assists) / 
-                                                                        x.info.participants[playerPos[i]].deaths).toFixed(2)) >= 3.00 ? '#DC7612' : "#B94646"
+                                                                        x.info.participants[playerPos[i]].deaths).toFixed(2)) >= 3.00 ? '#DC7612' : "#6E6E6E"
                                                                 }}>
                                                                     {((x.info.participants[playerPos[i]].kills + x.info.participants[playerPos[i]].assists) / x.info.participants[playerPos[i]].deaths).toFixed(2)}
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div style={{
+                                                            display:'flex',
+                                                            justifyContent: 'space-between',
+                                                            width: 280,
+                                                            marginLeft: 100
+                                                        }}>
+                                                            {x.info.participants[playerPos[i]].item0 != 0 ? (
+                                                                <img style={{width: 30, borderRadius: 15}} src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/item/${x.info.participants[playerPos[i]].item0}.png`} />
+                                                            ) : (
+                                                                <div style={{width: 30, height: 30, borderRadius: 15, backgroundColor: '#282828'}} />
+                                                            )}
+                                                            {x.info.participants[playerPos[i]].item1 != 0 ? (
+                                                                <img style={{width: 30, borderRadius: 15}} src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/item/${x.info.participants[playerPos[i]].item1}.png`} />
+                                                            ) : (
+                                                                <div style={{width: 30, height: 30, borderRadius: 15, backgroundColor: '#282828'}} />
+                                                            )}
+                                                            {x.info.participants[playerPos[i]].item2 != 0 ? (
+                                                                <img style={{width: 30, borderRadius: 15}} src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/item/${x.info.participants[playerPos[i]].item2}.png`} />
+                                                            ) : (
+                                                                <div style={{width: 30, height: 30, borderRadius: 15, backgroundColor: '#282828'}} />
+                                                            )}
+                                                            {x.info.participants[playerPos[i]].item3 != 0 ? (
+                                                                <img style={{width: 30, borderRadius: 15}} src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/item/${x.info.participants[playerPos[i]].item3}.png`} />
+                                                            ) : (
+                                                                <div style={{width: 30, height: 30, borderRadius: 15, backgroundColor: '#282828'}} />
+                                                            )}
+                                                            {x.info.participants[playerPos[i]].item4 != 0 ? (
+                                                                <img style={{width: 30, borderRadius: 15}} src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/item/${x.info.participants[playerPos[i]].item4}.png`} />
+                                                            ) : (
+                                                                <div style={{width: 30, height: 30, borderRadius: 15, backgroundColor: '#282828'}} />
+                                                            )}
+                                                            {x.info.participants[playerPos[i]].item5 != 0 ? (
+                                                                <img style={{width: 30, borderRadius: 15}} src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/item/${x.info.participants[playerPos[i]].item5}.png`} />
+                                                            ) : (
+                                                                <div style={{width: 30, height: 30, borderRadius: 15, backgroundColor: '#282828'}} />
+                                                            )}
+                                                            {x.info.participants[playerPos[i]].item6 != 0 ? (
+                                                                <img style={{width: 30, borderRadius: 15, marginLeft: 15}} src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/item/${x.info.participants[playerPos[i]].item6}.png`} />
+                                                            ) : (
+                                                                <div style={{width: 30, height: 30, borderRadius: 15, backgroundColor: '#282828'}} />
+                                                            )}
+                                                        </div>
+                                                        <div className="won_lost" style={{
+                                                            backgroundColor: x.info.participants[playerPos[i]].win ? '#4BB543' : '#B94646',
+                                                            width: 5,
+                                                            borderRadius: 10,
+                                                            marginLeft: 'auto'
+                                                        }}/>
                                                     </div>
                                                 }
                                             </div>
