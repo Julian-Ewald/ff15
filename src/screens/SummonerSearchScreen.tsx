@@ -2,10 +2,12 @@ import React, { useState, useRef } from 'react';
 import { Formik } from 'formik';
 import { IoSearch } from "react-icons/io5"
 import '../App.global.css';
+import ContentLoader, { IContentLoaderProps } from 'react-content-loader';
 
 export default function SummonerSearchScreen () {
 
     const scrollToBtm = useRef<any>(null)
+    const [tempSumName, setTempSumName] = useState("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -25,70 +27,97 @@ export default function SummonerSearchScreen () {
             listSums.push(`${key}`)
         }
     }
+
+    const Loader = (props: JSX.IntrinsicAttributes & IContentLoaderProps & { children?: React.ReactNode; }) => (
+        <ContentLoader
+          speed={2}
+          width="100%"
+          height={600}
+          viewBox="0 0 100% 600"
+          backgroundColor="#171717"
+          foregroundColor="#1f1f1f"
+          {...props}
+        >
+          <rect x="0" y="0" rx="52" ry="52" width="102" height="102" /> 
+          <rect x="19.5" y="90" rx="10" ry="10" width="60" height="28" />
+          <rect x="0" y="140" rx="10" ry="10" width="102" height="21" />
+          <rect x="132" y="0" rx="10" ry="10" width="102" height="21" />
+          <rect x="132" y="35" rx="10" ry="10" width="965" height="70" />
+          <rect x="132" y="115" rx="10" ry="10" width="965" height="70" />
+          <rect x="132" y="200" rx="10" ry="10" width="965" height="70" />
+          <rect x="132" y="280" rx="10" ry="10" width="965" height="70" />
+          <rect x="132" y="365" rx="10" ry="10" width="965" height="70" />
+          <rect x="132" y="450" rx="10" ry="10" width="965" height="70" />
+          <rect x="132" y="530" rx="10" ry="10" width="965" height="70" />
+        </ContentLoader>
+    )
     
     return (
     <div className="bigContainer" style={{backgroundColor: '#1D1D1D' }}>
         <Formik
             initialValues={{ summonerName: '' }}
             onSubmit={async (values, { setSubmitting }) => {
-                setMatches([])
-                setIsLoading(true)
-                const response = await fetch(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${values.summonerName}`, {
-                    headers: {
-                        "X-Riot-Token": "RGAPI-7a684882-6c53-4714-9914-ff9803f332f1"
-                    }
-                })
-                const resSummoner = await response.json()
-                const resStatus = await response.status
-                setSummoner(resSummoner)
-                setStatus(resStatus)
-
-                await fetch(`https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${resSummoner.puuid}/ids?start=0&count=20`, {
-                    headers: {
-                        "X-Riot-Token": "RGAPI-7a684882-6c53-4714-9914-ff9803f332f1"
-                    }
-                })
-                .then(response => response.json())
-                .then(async (data) => {
-                    let temp: any = []
-                    let temp1: any = []
-                    for (let i = 0; i < data.length; i++) {
-                        await fetch(`https://europe.api.riotgames.com/lol/match/v5/matches/${data[i]}`, {
-                            headers: {
-                                "X-Riot-Token": "RGAPI-7a684882-6c53-4714-9914-ff9803f332f1"
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status) {
-                                return
-                            } else {
-                                temp.push(data)
-                                for (let k = 0; k < data.metadata.participants.length; k++) {
-                                    if (data.metadata.participants[k] == resSummoner.puuid) {
-                                        temp1.push(k)
+                if (values.summonerName != tempSumName && values.summonerName) {
+                    setMatches([])
+                    setIsLoading(true)
+                    scrollToBtm.current?.scrollIntoView({behavior: 'smooth'})
+                    const response = await fetch(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${values.summonerName}`, {
+                        headers: {
+                            "X-Riot-Token": "RGAPI-7a684882-6c53-4714-9914-ff9803f332f1"
+                        }
+                    })
+                    const resSummoner = await response.json()
+                    const resStatus = await response.status
+                    setSummoner(resSummoner)
+                    setStatus(resStatus)
+    
+                    await fetch(`https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${resSummoner.puuid}/ids?start=0&count=20`, {
+                        headers: {
+                            "X-Riot-Token": "RGAPI-7a684882-6c53-4714-9914-ff9803f332f1"
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(async (data) => {
+                        let temp: any = []
+                        let temp1: any = []
+                        for (let i = 0; i < data.length; i++) {
+                            await fetch(`https://europe.api.riotgames.com/lol/match/v5/matches/${data[i]}`, {
+                                headers: {
+                                    "X-Riot-Token": "RGAPI-7a684882-6c53-4714-9914-ff9803f332f1"
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status) {
+                                    return
+                                } else {
+                                    temp.push(data)
+                                    for (let k = 0; k < data.metadata.participants.length; k++) {
+                                        if (data.metadata.participants[k] == resSummoner.puuid) {
+                                            temp1.push(k)
+                                        }
                                     }
                                 }
-                            }
-                        })
-                    }
-                    setMatches(temp)
-                    setPlayerPos(temp1)
-                    temp = []
-                    temp1 = []
-                })
-
-                await fetch("http://ddragon.leagueoflegends.com/cdn/11.10.1/data/en_US/summoner.json")
-                .then(response => response.json())
-                .then(data => setSummoners(data.data))
-
-                await fetch("http://ddragon.leagueoflegends.com/cdn/11.10.1/data/en_US/runesReforged.json")
-                .then(response => response.json())
-                .then(data => setRunes(data))
-
-                setIsLoading(false)
-                scrollToBtm.current?.scrollIntoView({behavior: 'smooth'})
-                setSubmitting(false)
+                            })
+                        }
+                        setMatches(temp)
+                        setPlayerPos(temp1)
+                        temp = []
+                        temp1 = []
+                    })
+    
+                    await fetch("http://ddragon.leagueoflegends.com/cdn/11.10.1/data/en_US/summoner.json")
+                    .then(response => response.json())
+                    .then(data => setSummoners(data.data))
+    
+                    await fetch("http://ddragon.leagueoflegends.com/cdn/11.10.1/data/en_US/runesReforged.json")
+                    .then(response => response.json())
+                    .then(data => setRunes(data))
+    
+                    setIsLoading(false)
+                    setTempSumName(values.summonerName);
+                    setSubmitting(false)
+                }
             }}
         >
         {({ handleChange, handleSubmit, }) => (
@@ -113,8 +142,10 @@ export default function SummonerSearchScreen () {
             )
         }
         {isLoading ? (
-            <div>
-                Loading...
+            <div style={{width: "100%", height: "100%"}}>
+                <div style={{padding: 10}}>
+                    <Loader />
+                </div>
             </div>
         ) : (
             <div style={{width: "100%", height: "100%"}}>
