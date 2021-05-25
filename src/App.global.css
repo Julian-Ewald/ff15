@@ -71,6 +71,39 @@ input:active {
   border-radius: 9999px;
 }
 
+.topBar {
+  width: 100%;
+  height: 30px;
+  background-color: #1D1D1D;
+  align-items: center;
+  justify-content: flex-end;
+  display: flex;
+  -webkit-app-region: drag;
+  -webkit-user-select: none;
+}
+.topBarItem {
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1D1D1D;
+}
+.topBarItem:hover {
+  background-color: #404040;
+  cursor: pointer;
+}
+.close {
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1D1D1D;
+}
+.close:hover {
+  background-color: rgb(211, 0, 0);
+  cursor: pointer;
+}
+
 .sidebar {
   height: 100vh;
   width: 80px;

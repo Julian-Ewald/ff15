@@ -6,16 +6,12 @@ import ChampionsScreen from './screens/ChampionsScreen';
 import ChampionScreen from './screens/ChampionScreen';
 import SummonerSearchScreen from './screens/SummonerSearchScreen';
 import Sidebar from './components/Layout/Sidebar';
-
-// import { Titlebar, Color } from 'custom-electron-titlebar'
-
-// new Titlebar({
-// 	backgroundColor: Color.fromHex('#ECECEC')
-// });
+import TopBar from './components/Layout/TopBar';
 
 export default function App() {
   return (
     <Router>
+      <TopBar />
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <Sidebar />
         <Switch>

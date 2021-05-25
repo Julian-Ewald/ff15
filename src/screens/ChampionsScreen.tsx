@@ -74,7 +74,7 @@ export default function ChampionsScreen () {
                       width: 90,
                       borderRadius: 10
                     }} 
-                    src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/champion/${champs[x].image.full}`} 
+                    src={`${__dirname}/assets/champion/tiles/${champs[x].id}_0.jpg`}
                   />
                   <p className="championText" style={{color: 'whitesmoke', letterSpacing: 0.5, fontSize: 14, whiteSpace: 'nowrap'}}>
                     {champs[x].id}

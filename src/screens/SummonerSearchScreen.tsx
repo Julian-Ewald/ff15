@@ -4,8 +4,8 @@ import { IoSearch } from "react-icons/io5"
 import '../App.global.css';
 import ContentLoader, { IContentLoaderProps } from 'react-content-loader';
 
-export default function SummonerSearchScreen () {
 
+export default function SummonerSearchScreen () {
     const scrollToBtm = useRef<any>(null)
     const [tempSumName, setTempSumName] = useState("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -59,12 +59,12 @@ export default function SummonerSearchScreen () {
             initialValues={{ summonerName: '' }}
             onSubmit={async (values, { setSubmitting }) => {
                 if (values.summonerName != tempSumName && values.summonerName) {
-                    setMatches([])
+                    setMatches([]) 
                     setIsLoading(true)
                     scrollToBtm.current?.scrollIntoView({behavior: 'smooth'})
                     const response = await fetch(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${values.summonerName}`, {
                         headers: {
-                            "X-Riot-Token": "RGAPI-7a684882-6c53-4714-9914-ff9803f332f1"
+                            "X-Riot-Token": "RGAPI-e0e52b65-d345-4848-bf24-7ff71f64f180"
                         }
                     })
                     const resSummoner = await response.json()
@@ -74,7 +74,7 @@ export default function SummonerSearchScreen () {
     
                     await fetch(`https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${resSummoner.puuid}/ids?start=0&count=20`, {
                         headers: {
-                            "X-Riot-Token": "RGAPI-7a684882-6c53-4714-9914-ff9803f332f1"
+                            "X-Riot-Token": "RGAPI-e0e52b65-d345-4848-bf24-7ff71f64f180"
                         }
                     })
                     .then(response => response.json())
@@ -84,7 +84,7 @@ export default function SummonerSearchScreen () {
                         for (let i = 0; i < data.length; i++) {
                             await fetch(`https://europe.api.riotgames.com/lol/match/v5/matches/${data[i]}`, {
                                 headers: {
-                                    "X-Riot-Token": "RGAPI-7a684882-6c53-4714-9914-ff9803f332f1"
+                                    "X-Riot-Token": "RGAPI-e0e52b65-d345-4848-bf24-7ff71f64f180"
                                 }
                             })
                             .then(response => response.json())
@@ -114,6 +114,8 @@ export default function SummonerSearchScreen () {
                     await fetch("http://ddragon.leagueoflegends.com/cdn/11.10.1/data/en_US/runesReforged.json")
                     .then(response => response.json())
                     .then(data => setRunes(data))
+
+                    console.log(runes)
 
                     await fetch("http://static.developer.riotgames.com/docs/lol/queues.json")
                     .then(response => response.json())
@@ -187,8 +189,7 @@ export default function SummonerSearchScreen () {
                             <div className="matchH" style={{
                                 width: "100%", 
                                 borderRadius: 10,
-                                marginLeft: 20,
-                                paddingLeft: 10,
+                                paddingLeft: 15,
                                 paddingRight: 10
                             }}>
                                 <div style={{
@@ -239,7 +240,7 @@ export default function SummonerSearchScreen () {
                                                                 </div>
                                                             </div>
                                                             <div style={{height: 40}}>
-                                                                <img style={{width: 40, height: 40, borderRadius: 20, marginRight: 5}} src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/champion/${x.info.participants[playerPos[i]].championName}.png`} />
+                                                                <img style={{width: 40, height: 40, borderRadius: 20, marginRight: 5}} src={`${__dirname}/assets/champion/tiles/${x.info.participants[playerPos[i]].championName}_0.jpg`} />
                                                                 <div className="champLvl" style={{
                                                                     backgroundColor: '#171717',
                                                                     width: 25,
@@ -301,9 +302,9 @@ export default function SummonerSearchScreen () {
                                                                         <>
                                                                             {x.info.participants[playerPos[i]].perks.styles[0].style == runes[b].id && (
                                                                                 <img 
-                                                                                    src={`C:\\Users\\Julian\\Desktop\\Projekte\\lol_app\\src\\assets\\${runes[b].icon}`} 
+                                                                                    src={`${__dirname}/assets/${runes[b].slots[0].runes[0].icon}`} 
                                                                                     style={{
-                                                                                        width: 20,
+                                                                                        width: 25,
                                                                                         backgroundColor: '#282828',
                                                                                         borderRadius: 50,
                                                                                         padding: 5,
@@ -319,7 +320,7 @@ export default function SummonerSearchScreen () {
                                                                         <>
                                                                             {x.info.participants[playerPos[i]].perks.styles[1].style == runes[b].id && (
                                                                                 <img 
-                                                                                    src={`C:\\Users\\Julian\\Desktop\\Projekte\\lol_app\\src\\assets\\${runes[b].icon}`} 
+                                                                                    src={`${__dirname}/assets/${runes[b].icon}`}
                                                                                     style={{
                                                                                         width: 15
                                                                                     }}

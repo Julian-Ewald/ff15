@@ -1,20 +1,12 @@
-/* eslint global-require: off, no-console: off */
-
-/**
- * This module executes inside of electron's main process. You can start
- * electron renderer process from here and communicate with the other processes
- * through IPC.
- *
- * When running `yarn build` or `yarn build:main`, this file is compiled to
- * `./src/main.prod.js` using webpack. This gives us some performance wins.
- */
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, shell } from 'electron';
+import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
+
+const ipc = ipcMain
 
 export default class AppUpdater {
   constructor() {
@@ -71,7 +63,7 @@ const createWindow = async () => {
     show: false,
     width: 1265,
     height: 710,
-    titleBarStyle: 'hidden',
+    frame: false,
     resizable: false,
     icon: getAssetPath('icon.png'),
     webPreferences: {
@@ -82,6 +74,9 @@ const createWindow = async () => {
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   mainWindow.removeMenu()
+
+  ipc.on('closeApp', () => mainWindow?.close())
+  ipc.on('minimizeApp', () => mainWindow?.minimize())
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
@@ -117,8 +112,6 @@ const createWindow = async () => {
  */
 
 app.on('window-all-closed', () => {
-  // Respect the OSX convention of having the application in memory even
-  // after all windows have been closed
   if (process.platform !== 'darwin') {
     app.quit();
   }

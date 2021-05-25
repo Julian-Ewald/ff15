@@ -1,13 +1,9 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import '../../App.global.css';
 import SidebarItem from './SidebarItem';
 import { IoSearch, IoAppsOutline } from "react-icons/io5"
 
 export default function Sidebar() {
-
-    const history = useHistory();
-
     return (
         <div className="sidebar">
             <SidebarItem pathTo="/summonerSearch" icon={<IoSearch style={{color: '#C4C4C4', height: 25, width: 25}} />} />
