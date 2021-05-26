@@ -21,6 +21,9 @@ export default function SummonerSearchScreen () {
     const [runes, setRunes] = useState<any>([]);
     const [gameType, setGameType] = useState<any>([]);
 
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [index, setIndex] = useState<any>("");
+
     const listSums:any = []
 
     for(let key in summoners) {
@@ -69,6 +72,10 @@ export default function SummonerSearchScreen () {
                     })
                     const resSummoner = await response.json()
                     const resStatus = await response.status
+                    let message = "";
+                    if (response.status !== 200) {
+                        console.log(response.status)
+                    }
                     setSummoner(resSummoner)
                     setStatus(resStatus)
     
@@ -114,8 +121,6 @@ export default function SummonerSearchScreen () {
                     await fetch("http://ddragon.leagueoflegends.com/cdn/11.10.1/data/en_US/runesReforged.json")
                     .then(response => response.json())
                     .then(data => setRunes(data))
-
-                    console.log(runes)
 
                     await fetch("http://static.developer.riotgames.com/docs/lol/queues.json")
                     .then(response => response.json())
@@ -207,7 +212,17 @@ export default function SummonerSearchScreen () {
                                         <>
                                             <div className="matchHItem" key={x.info.gameId}>
                                                 {
-                                                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', width: "100%"}}>
+                                                    <>
+                                                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', width: "100%"}}
+                                                        onClick={() => {
+                                                            setIsOpen(true)
+                                                            setIndex(i)
+                                                            if (index === i) {
+                                                                setIsOpen(false)
+                                                                setIndex(null)
+                                                            }
+                                                        }}
+                                                    >
                                                         <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                                                             <div style={{fontSize: 11, marginRight: 15}}>
                                                             <div style={{
@@ -220,7 +235,7 @@ export default function SummonerSearchScreen () {
                                                                     gameType.map((j: any) => 
                                                                         <>
                                                                             {j.queueId == x.info.queueId && 
-                                                                                <div>
+                                                                                <div key={`${x.info.gameMode}`}>
                                                                                     {x.info.gameMode == "ARAM" ? "ARAM" : j.description.split(" ")[1] + " " + j.description.split(" ")[2]}
                                                                                 </div>
                                                                             }
@@ -408,6 +423,155 @@ export default function SummonerSearchScreen () {
                                                             marginLeft: 'auto'
                                                         }}/>
                                                     </div>
+                                                    {
+                                                        index === i && isOpen && (
+                                                            <div style={{paddingTop: 10}}>
+                                                                <div style={{width: "100%", height: 2, backgroundColor: '#1D1D1D', marginBottom: 15}} />
+                                                                <div className="allyTeam" style={{
+                                                                    display: 'flex',
+                                                                    flexDirection: x.info.participants[playerPos[i]].teamId !== 100 ? 'column-reverse' : 'column'
+                                                                }}>
+                                                                    <div>
+                                                                        {
+                                                                            x.info.participants.map((z: any) => (
+                                                                                <>
+                                                                                    {
+                                                                                        z.teamId === 100 && (
+                                                                                            <div onClick={() => {console.log("test")}} style={{
+                                                                                                backgroundColor: z.summonerName === x.info.participants[playerPos[i]].summonerName ? '#1D1D1D' : "#171717",
+                                                                                                padding: 5,
+                                                                                                display: 'flex',
+                                                                                                flexDirection: 'row',
+                                                                                                borderRadius: 10,
+                                                                                                alignItems: 'center',
+                                                                                                zIndex: 100
+                                                                                            }}>
+                                                                                                <div style={{
+                                                                                                    marginRight: 15,
+                                                                                                    display: 'flex',
+                                                                                                    flexDirection: 'row'
+                                                                                                }}>
+                                                                                                    <img style={{height: 30, width: 30, borderRadius: 15}} src={`${__dirname}/assets/champion/tiles/${z.championName}_0.jpg`} />
+                                                                                                    <div style={{
+                                                                                                        display: 'flex',
+                                                                                                        flexDirection: 'column',
+                                                                                                        marginRight: 15,
+                                                                                                        marginLeft: 10
+                                                                                                    }}>
+                                                                                                        {
+                                                                                                            listSums.map((a: any) => 
+                                                                                                                <>
+                                                                                                                    {summoners[a].key == z.summoner1Id && (
+                                                                                                                        <img
+                                                                                                                            src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/spell/${summoners[a].image.full}`}
+                                                                                                                            style={{
+                                                                                                                                width: 15
+                                                                                                                            }}
+                                                                                                                        />
+                                                                                                                    )}
+                                                                                                                </>
+                                                                                                            )
+                                                                                                        }
+                                                                                                        {
+                                                                                                            listSums.map((a: any) => 
+                                                                                                                <>
+                                                                                                                    {summoners[a].key == z.summoner2Id && (
+                                                                                                                        <img
+                                                                                                                            src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/spell/${summoners[a].image.full}`}
+                                                                                                                            style={{
+                                                                                                                                width: 15
+                                                                                                                            }}
+                                                                                                                        />
+                                                                                                                    )}
+                                                                                                                </>
+                                                                                                            )
+                                                                                                        }
+                                                                                                    </div>
+                                                                                                    <div style={{
+                                                                                                        display: 'flex',
+                                                                                                        flexDirection: 'row',
+                                                                                                        marginRight: 20,
+                                                                                                        marginLeft: 5,
+                                                                                                        alignItems: 'center',
+                                                                                                    }}>
+                                                                                                        {
+                                                                                                            runes.map((j: any, b: number) => 
+                                                                                                                <>
+                                                                                                                    {x.info.participants[playerPos[i]].perks.styles[0].style == runes[b].id && (
+                                                                                                                        <img 
+                                                                                                                            src={`${__dirname}/assets/${runes[b].slots[0].runes[0].icon}`} 
+                                                                                                                            style={{
+                                                                                                                                width: 25,
+                                                                                                                                backgroundColor: '#282828',
+                                                                                                                                borderRadius: 50,
+                                                                                                                                padding: 5,
+                                                                                                                                marginRight: 10
+                                                                                                                            }}
+                                                                                                                        />
+                                                                                                                    )}
+                                                                                                                </>
+                                                                                                            )
+                                                                                                        }
+                                                                                                        {
+                                                                                                            runes.map((j: any, b: number) => 
+                                                                                                                <>
+                                                                                                                    {x.info.participants[playerPos[i]].perks.styles[1].style == runes[b].id && (
+                                                                                                                        <img 
+                                                                                                                            src={`${__dirname}/assets/${runes[b].icon}`}
+                                                                                                                            style={{
+                                                                                                                                width: 15
+                                                                                                                            }}
+                                                                                                                        />
+                                                                                                                    )}
+                                                                                                                </>
+                                                                                                            )
+                                                                                                        }
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div style={{
+                                                                                                    width: 50
+                                                                                                }}>
+                                                                                                    {z.summonerName}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        )
+                                                                                    }
+                                                                                </>
+                                                                            ))
+                                                                        }
+                                                                    </div>
+                                                                    <div style={{height: 15}} />
+                                                                    <div>
+                                                                        {
+                                                                            x.info.participants.map((z: any) => (
+                                                                                <>
+                                                                                    {
+                                                                                        z.teamId === 200 && (
+                                                                                            <div style={{
+                                                                                                backgroundColor: z.summonerName === x.info.participants[playerPos[i]].summonerName ? '#1D1D1D' : "#171717",
+                                                                                                height: 30
+                                                                                            }}>
+                                                                                                <div>
+                                                                                                    <img />
+                                                                                                </div>
+                                                                                                <div>
+                                                                                                    {z.summonerName}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        )
+                                                                                    }
+                                                                                </>
+                                                                            ))
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                                <div className="enemyTeam">
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    </>
                                                 }
                                             </div>
                                         </>

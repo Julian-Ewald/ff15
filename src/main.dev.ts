@@ -4,7 +4,7 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import MenuBuilder from './menu';
+// import MenuBuilder from './menu';
 
 const ipc = ipcMain
 
@@ -59,9 +59,10 @@ const createWindow = async () => {
     return path.join(RESOURCES_PATH, ...paths);
   };
 
+  // width: 1265
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1265,
+    width: 1600,
     height: 710,
     frame: false,
     resizable: false,
