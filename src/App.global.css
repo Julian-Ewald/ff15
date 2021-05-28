@@ -246,9 +246,6 @@ table {
   height: 40px;
   transition-duration: 200ms;
 }
-.matchHItem:active {
-  background-color: #1a1f25;
-}
 
 .champLvl {
   transform: translateX(20px) translateY(-18px);
