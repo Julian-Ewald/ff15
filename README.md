@@ -1,4 +1,4 @@
-# ff15
+# ff15 (under development)
 is a easy to use analysis tool for League of Legends.
 
 
