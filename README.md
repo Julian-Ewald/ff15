@@ -1,5 +1,5 @@
 # ff15
-is a easy to use analytics tool for League of Legends.
+is a easy to use analysis tool for League of Legends.
 
 
 **Summoner search screen:**
