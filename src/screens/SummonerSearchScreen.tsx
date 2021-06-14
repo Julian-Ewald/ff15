@@ -63,6 +63,8 @@ export default function SummonerSearchScreen () {
         return false;
         return Math.max.apply(null, value);
     }
+
+    console.log(runes)
     
     return (
     <div className="bigContainer" style={{backgroundColor: '#1D1D1D' }}>
@@ -76,7 +78,7 @@ export default function SummonerSearchScreen () {
                     scrollToBtm.current?.scrollIntoView({behavior: 'smooth'})
                     const response = await fetch(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${values.summonerName}`, {
                         headers: {
-                            "X-Riot-Token": "RGAPI-f439e3ee-8d69-45f3-ab99-a6ae9dded372"
+                            "X-Riot-Token": "RGAPI-0e21e839-877d-4fc2-a7d3-c23c635f7ee3"
                         }
                     })
                     const resSummoner = await response.json()
@@ -88,9 +90,9 @@ export default function SummonerSearchScreen () {
                     setSummoner(resSummoner)
                     setStatus(resStatus)
     
-                    await fetch(`https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${resSummoner.puuid}/ids?start=0&count=50`, {
+                    await fetch(`https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${resSummoner.puuid}/ids?start=0&count=100`, {
                         headers: {
-                            "X-Riot-Token": "RGAPI-f439e3ee-8d69-45f3-ab99-a6ae9dded372"
+                            "X-Riot-Token": "RGAPI-0e21e839-877d-4fc2-a7d3-c23c635f7ee3"
                         }
                     })
                     .then(response => response.json())
@@ -100,7 +102,7 @@ export default function SummonerSearchScreen () {
                         for (let i = 0; i < data.length; i++) {
                             await fetch(`https://europe.api.riotgames.com/lol/match/v5/matches/${data[i]}`, {
                                 headers: {
-                                    "X-Riot-Token": "RGAPI-f439e3ee-8d69-45f3-ab99-a6ae9dded372"
+                                    "X-Riot-Token": "RGAPI-0e21e839-877d-4fc2-a7d3-c23c635f7ee3"
                                 }
                             })
                             .then(response => response.json())
@@ -338,16 +340,29 @@ export default function SummonerSearchScreen () {
                                                                     runes.map((j: any, b: number) => 
                                                                         <>
                                                                             {x.info.participants[playerPos[i]].perks.styles[0].style == runes[b].id && (
-                                                                                <img 
-                                                                                    src={`${__dirname}/assets/${runes[b].slots[0].runes[0].icon}`} 
-                                                                                    style={{
-                                                                                        width: 25,
-                                                                                        backgroundColor: '#282828',
-                                                                                        borderRadius: 50,
-                                                                                        padding: 5,
-                                                                                        marginRight: 10
-                                                                                    }}
-                                                                                />
+                                                                                <>
+                                                                                    {
+                                                                                        runes[b].slots[0].runes.map((o: any, v: number) => 
+                                                                                            <>
+                                                                                                {
+                                                                                                    runes[b].slots[0].runes[v].id == x.info.participants[playerPos[i]].perks.styles[0].selections[0].perk &&
+                                                                                                        <>{
+                                                                                                            <img 
+                                                                                                                src={`${__dirname}/assets/${runes[b].slots[0].runes[v].icon}`}
+                                                                                                                style={{
+                                                                                                                    width: 25,
+                                                                                                                    backgroundColor: '#282828',
+                                                                                                                    borderRadius: 50,
+                                                                                                                    padding: 5,
+                                                                                                                    marginRight: 10
+                                                                                                                }}
+                                                                                                            />
+                                                                                                        }</>
+                                                                                                }
+                                                                                            </>
+                                                                                        )
+                                                                                    }
+                                                                                </>
                                                                             )}
                                                                         </>
                                                                     )
@@ -590,6 +605,8 @@ export default function SummonerSearchScreen () {
                                                                                                 <div style={{fontSize: 11, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                                                                                     <div>
                                                                                                         {
+                                                                                                            z.totalDamageDealtToChampions.toString().length == 3 ? z.totalDamageDealtToChampions.toString() : 
+                                                                                                            z.totalDamageDealtToChampions.toString().length == 4 ? z.totalDamageDealtToChampions.toString().substring(0, 1) + " " + z.totalDamageDealtToChampions.toString().substring(1) :
                                                                                                             z.totalDamageDealtToChampions.toString().substring(0, 2) + " " + z.totalDamageDealtToChampions.toString().substring(2)
                                                                                                         }
                                                                                                     </div>
@@ -751,6 +768,8 @@ export default function SummonerSearchScreen () {
                                                                                                 <div style={{fontSize: 11, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                                                                                     <div>
                                                                                                         {
+                                                                                                            z.totalDamageDealtToChampions.toString().length == 3 ? z.totalDamageDealtToChampions.toString() : 
+                                                                                                            z.totalDamageDealtToChampions.toString().length == 4 ? z.totalDamageDealtToChampions.toString().substring(0, 1) + " " + z.totalDamageDealtToChampions.toString().substring(1) :
                                                                                                             z.totalDamageDealtToChampions.toString().substring(0, 2) + " " + z.totalDamageDealtToChampions.toString().substring(2)
                                                                                                         }
                                                                                                     </div>

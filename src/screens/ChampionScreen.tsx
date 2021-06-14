@@ -7,7 +7,7 @@ export default function ChampionScreen () {
     const history = useHistory();
     const location = useLocation<any>();
 
-    const url = `http://ddragon.leagueoflegends.com/cdn/11.10.1/data/en_US/champion/${location.state.name}.json`
+    const url = `http://ddragon.leagueoflegends.com/cdn/11.12.1/data/en_US/champion/${location.state.name}.json`
     const [champ, setChamp] = useState<any>();
     const [spells, setSpells] = useState<any>([]);
     const [passive, setPassive] = useState<any>();
@@ -73,7 +73,7 @@ export default function ChampionScreen () {
                 </div>
                 <div style={{display: 'flex', flexDirection: 'row'}}>
                   <div style={{marginRight: 30, alignItems: 'center'}}>
-                    <img className="spellImg" style={{width: 40, height: "auto", borderRadius: 50}} src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/passive/${passive}`} />
+                    <img className="spellImg" style={{width: 40, height: "auto", borderRadius: 50}} src={`http://ddragon.leagueoflegends.com/cdn/11.12.1/img/passive/${passive}`} />
                     <div
                       className="championText"
                       style={{
@@ -91,7 +91,7 @@ export default function ChampionScreen () {
                   {
                     spells.map((x: any) => 
                       <div className="spellItem" style={{marginRight: 15, alignItems: 'center'}}>
-                        <img className="spellImg" style={{width: 40, height: "auto", borderRadius: 50}} src={`http://ddragon.leagueoflegends.com/cdn/11.10.1/img/spell/${x.id}.png`} />
+                        <img className="spellImg" style={{width: 40, height: "auto", borderRadius: 50}} src={`http://ddragon.leagueoflegends.com/cdn/11.12.1/img/spell/${x.image.full}`} />
                         <div
                           className="championText" 
                           style={{

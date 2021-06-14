@@ -60,9 +60,10 @@ const createWindow = async () => {
   };
 
   // width: 1265
+  // width: 1600
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1600,
+    width: 1265,
     height: 710,
     frame: false,
     resizable: false,
