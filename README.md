@@ -1,6 +1,6 @@
 # ff15 (under development)
 ## Description
-is a easy to use analysis tool for League of Legends.
+ff15 (under development!) is a easy to use analysis tool designed for every player. The product will give you all kinds of useful information about your profile, your games or champions. For example the most played itembuilds or runes for a champion. You also get access to detailed profile statistics like your winrate on a specific champion or lane and thats only a glimps of what you can access in ff15.
 
 ## Images
 ### **Summoner search screen:**
