@@ -14,6 +14,6 @@ is a easy to use analysis tool for League of Legends.
 ![image](https://user-images.githubusercontent.com/35593446/121968630-f4164c80-cd72-11eb-91b3-717dcd75efe8.png)
 
 
-### **Champion details: (coming soon!)**
+### **Champion details:**
 
 ![image](https://user-images.githubusercontent.com/35593446/121968666-01333b80-cd73-11eb-9cbc-2cfcb42b4ce8.png)
